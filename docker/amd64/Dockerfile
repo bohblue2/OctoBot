@@ -14,13 +14,16 @@ RUN pip install --upgrade pip \
 
 FROM python:3.7-slim
 
-WORKDIR /octobot
 COPY --from=base /opt/venv /opt/venv
-COPY config /octobot/config
+
+RUN octobot --create-home octobot
+WORKDIR /home/octobot
+USER octobot
+COPY config /home/octobotconfig
 
 # Make sure we use the virtualenv:
 ENV PATH="/opt/venv/bin:$PATH"
 
-RUN cp /opt/venv/bin/OctoBot /octobot/OctoBot
+RUN cp /opt/venv/bin/OctoBot /home/octobot/OctoBot
 
 CMD ["./OctoBot", "-no"]
